@@ -28,7 +28,7 @@ try {
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // ✅ Création d’un patient
-if ($path == '/aurelie-projet-labo/api/api-patient.php/register' && $method == 'POST') {
+if ($path == '/aurelie-projet_Labo-master/api/api-patient.php/register' && $method == 'POST') {
     try {
         $nom = $input['nom'];
         $prenom = $input['prenom'];
@@ -45,7 +45,7 @@ if ($path == '/aurelie-projet-labo/api/api-patient.php/register' && $method == '
 }
 
 // ✅ Connexion d’un patient
-elseif ($path == '/aurelie-projet-labo/api/api-patient.php/login' && $method == 'POST') {
+elseif ($path == '/aurelie-projet_Labo-master/api/api-patient.php/login' && $method == 'POST') {
     try {
         $email = $input['email'];
         $mdp = $input['mdp'];
@@ -65,7 +65,7 @@ elseif ($path == '/aurelie-projet-labo/api/api-patient.php/login' && $method == 
 }
 
 // ✅ Liste de tous les patients
-elseif ($path == '/aurelie-projet-labo/api/api-patient.php/patients' && $method == 'GET') {
+elseif ($path == '/aurelie-projet_Labo-master/api/api-patient.php/patients' && $method == 'GET') {
     try {
         $stmt = $pdo->query("SELECT * FROM patient");
         echo json_encode($stmt->fetchAll());
@@ -75,7 +75,7 @@ elseif ($path == '/aurelie-projet-labo/api/api-patient.php/patients' && $method 
 }
 
 // ✅ Détails d’un patient
-elseif (preg_match('#^/aurelie-projet-labo/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'GET') {
+elseif (preg_match('#^/aurelie-projet_Labo/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'GET') {
     try {
         $id = $matches[1];
         $stmt = $pdo->prepare("SELECT * FROM patient WHERE id = ?");
@@ -93,7 +93,7 @@ elseif (preg_match('#^/aurelie-projet-labo/api/api-patient.php/patient/(\d+)$#',
 }
 
 // ✅ Mise à jour d’un patient
-elseif (preg_match('#^/aurelie-projet-labo/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'PUT') {
+elseif (preg_match('#^/aurelie-projet_Labo-mester/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'PUT') {
     try {
         $id = $matches[1];
         $nom = $input['nom'];
@@ -117,7 +117,7 @@ elseif (preg_match('#^/aurelie-projet-labo/api/api-patient.php/patient/(\d+)$#',
 }
 
 // ✅ Suppression d’un patient
-elseif (preg_match('#^/aurelie-projet-labo/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'DELETE') {
+elseif (preg_match('#^/aurelie-projet_Labo-master/api/api-patient.php/patient/(\d+)$#', $path, $matches) && $method == 'DELETE') {
     try {
         $id = $matches[1];
         $stmt = $pdo->prepare("DELETE FROM patient WHERE id = ?");

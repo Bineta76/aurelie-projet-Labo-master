@@ -38,7 +38,7 @@ try {
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // ✅ Route : liste de tous les spécialistes
-if ($path == '/aurelie-projet-labo/api/api-specialiste.php/specialistes' && $method == 'GET') {
+if ($path == '/aurelie-projet_Labo-master/api/api-specialiste.php/specialistes' && $method == 'GET') {
     try {
         $search = isset($_GET['search']) ? $_GET['search'] : '';
 
@@ -59,7 +59,7 @@ if ($path == '/aurelie-projet-labo/api/api-specialiste.php/specialistes' && $met
     }
 }
 // ✅ Route : un spécialiste spécifique
-elseif (preg_match('#^/aurelie-projet-labo/api/api-specialiste.php/specialistes/(\d+)$#', $path, $matches) && $method == 'GET') {
+elseif (preg_match('#^/aurelie-projet_Labo/api/api-specialiste.php/specialistes/(\d+)$#', $path, $matches) && $method == 'GET') {
     try {
         $id = $matches[1];
         $stmt = $pdo->prepare("SELECT * FROM specialiste WHERE id = ?");

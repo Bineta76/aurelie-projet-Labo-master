@@ -13,8 +13,10 @@ try {
 // Suppression d’un compte rendu
 if (isset($_GET['supprimer'])) {
     $id = intval($_GET['supprimer']);
-    $stmt = $pdo->prepare("DELETE FROM bilan WHERE id = ?");
-    $stmt->execute([$id]);
+    if ($id > 0) {
+        $stmt = $pdo->prepare("DELETE FROM bilan WHERE id = ?");
+        $stmt->execute([$id]);
+    }
     header("Location: bilan.php");
     exit;
 }
@@ -54,6 +56,8 @@ try {
 <body class="bg-light">
 <div class="container mt-5">
     <h1 class="mb-4">🩺 Gestion des comptes rendus</h1>
+
+    <p class="text-secondary">Les comptes rendus seront mis à disposition sur votre boîte mail.</p>
 
     <!-- Formulaire d'ajout -->
     <div class="card mb-4">
