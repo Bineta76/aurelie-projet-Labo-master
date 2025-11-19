@@ -1,5 +1,7 @@
 <?php
 session_start();
+include 'includes/header.php';
+?>
 
 // Connexion à la base de données
 try {

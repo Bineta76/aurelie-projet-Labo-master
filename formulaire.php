@@ -1,4 +1,7 @@
-
+<?php
+session_start();
+include 'includes/header.php';
+?>
   <form action="inscription.php" method="POST">
     <label for="username">Nom</label>
     <input type="text" id="username" name="username" required>
