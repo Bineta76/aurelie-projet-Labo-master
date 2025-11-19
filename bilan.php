@@ -22,6 +22,7 @@ if (isset($_GET['supprimer'])) {
 }
 
 // Ajout d’un compte rendu
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['contenu'])) {
     $contenu = trim($_POST['contenu']);
     if ($contenu !== '') {

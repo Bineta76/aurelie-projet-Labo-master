@@ -1,6 +1,5 @@
 <?php
 session_start();
-include 'includes/header.php';
 
 // Connexion à la base de données
 try {
@@ -10,37 +9,53 @@ try {
     die("❌ Erreur de connexion : " . $e->getMessage());
 }
 
-// Ajout d’un patient
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = trim($_POST['nom'] ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $region = trim($_POST['region'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+// -------------------- AJOUT DE PATIENT --------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
 
-    if ($nom && $prenom && $email) {
-        // Vérifier si l'email existe déjà
-        $stmt = $pdo->prepare("SELECT id FROM patient WHERE email = ?");
-        $stmt->execute([$email]);
+    if ($action === 'ajouter') {
+        $nom = trim($_POST['nom'] ?? '');
+        $prenom = trim($_POST['prenom'] ?? '');
+        $region = trim($_POST['region'] ?? '');
+        $email = trim($_POST['email'] ?? '');
 
-        if ($stmt->fetch()) {
-            echo "<div class='alert alert-warning'>⚠️ Cet email existe déjà.</div>";
-        } else {
-            try {
-                // Insérer le patient avec la région
+        if ($nom && $prenom && $email) {
+            // Vérifier si email existe déjà
+            $stmt = $pdo->prepare("SELECT id FROM patient WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                $message = "<div class='alert alert-warning'>⚠️ Cet email existe déjà.</div>";
+            } else {
                 $stmt = $pdo->prepare("INSERT INTO patient (nom, prenom, region, email) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$nom, $prenom, $region, $email]);
                 header("Location: patients.php");
                 exit;
-            } catch (PDOException $e) {
-                echo "<div class='alert alert-danger'>❌ Erreur PDO : " . htmlspecialchars($e->getMessage()) . "</div>";
             }
+        } else {
+            $message = "<div class='alert alert-warning'>⚠️ Nom, prénom et email sont obligatoires.</div>";
         }
-    } else {
-        echo "<div class='alert alert-warning'>⚠️ Nom, prénom et email sont obligatoires.</div>";
+    }
+
+    // -------------------- MODIFICATION DE PATIENT --------------------
+    if ($action === 'modifier') {
+        $id = intval($_POST['id']);
+        $nom = trim($_POST['nom'] ?? '');
+        $prenom = trim($_POST['prenom'] ?? '');
+        $region = trim($_POST['region'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+
+        if ($nom && $prenom && $email) {
+            $stmt = $pdo->prepare("UPDATE patient SET nom = ?, prenom = ?, region = ?, email = ? WHERE id = ?");
+            $stmt->execute([$nom, $prenom, $region, $email, $id]);
+            header("Location: patients.php");
+            exit;
+        } else {
+            $message = "<div class='alert alert-warning'>⚠️ Tous les champs sont obligatoires pour la mise à jour.</div>";
+        }
     }
 }
 
-// Suppression d’un patient
+// -------------------- SUPPRESSION DE PATIENT --------------------
 if (isset($_GET['supprimer'])) {
     $id = intval($_GET['supprimer']);
     $stmt = $pdo->prepare("DELETE FROM patient WHERE id = ?");
@@ -49,13 +64,9 @@ if (isset($_GET['supprimer'])) {
     exit;
 }
 
-// Récupération des patients
-try {
-    $stmt = $pdo->query("SELECT id, nom, prenom, region, email FROM patient ORDER BY id ASC");
-    $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("❌ Erreur PDO : " . $e->getMessage());
-}
+// -------------------- RÉCUPÉRATION DES PATIENTS --------------------
+$stmt = $pdo->query("SELECT id, nom, prenom, region, email FROM patient ORDER BY id ASC");
+$patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -68,24 +79,30 @@ try {
 <div class="container mt-5">
     <h1 class="mb-4">👨‍⚕️ Gestion des Patients</h1>
 
+    <!-- Message d'alerte -->
+    <?php if (!empty($message)) echo $message; ?>
+
     <!-- Formulaire d'ajout -->
     <div class="card mb-4">
         <div class="card-header">Ajouter un nouveau patient</div>
         <div class="card-body">
             <form method="post" action="">
-                <div class="mb-3">
-                    <input type="text" name="nom" class="form-control" placeholder="Nom" required>
+                <input type="hidden" name="action" value="ajouter">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="nom" class="form-control" placeholder="Nom" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="region" class="form-control" placeholder="Région">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="region" class="form-control" placeholder="Région">
-                </div>
-                <div class="mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <button type="submit" class="btn btn-primary mt-3">Ajouter</button>
             </form>
         </div>
     </div>
@@ -100,24 +117,29 @@ try {
                     <th>Prénom</th>
                     <th>Région</th>
                     <th>Email</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($patients as $p): ?>
                     <tr>
-                        <td><?= htmlspecialchars($p['id']) ?></td>
-                        <td><?= htmlspecialchars($p['nom']) ?></td>
-                        <td><?= htmlspecialchars($p['prenom']) ?></td>
-                        <td><?= htmlspecialchars($p['region'] ?: 'Non renseigné') ?></td>
-                        <td><?= htmlspecialchars($p['email']) ?></td>
-                        <td>
-                            <a href="?supprimer=<?= urlencode($p['id']) ?>" 
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Supprimer ce patient ?');">
-                               Supprimer
-                            </a>
-                        </td>
+                        <form method="post" action="">
+                            <td><?= htmlspecialchars($p['id']) ?>
+                                <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                            </td>
+                            <td><input type="text" name="nom" value="<?= htmlspecialchars($p['nom']) ?>" class="form-control" required></td>
+                            <td><input type="text" name="prenom" value="<?= htmlspecialchars($p['prenom']) ?>" class="form-control" required></td>
+                            <td><input type="text" name="region" value="<?= htmlspecialchars($p['region']) ?>" class="form-control"></td>
+                            <td><input type="email" name="email" value="<?= htmlspecialchars($p['email']) ?>" class="form-control" required></td>
+                            <td>
+                                <button type="submit" name="action" value="modifier" class="btn btn-success btn-sm">💾 Sauvegarder</button>
+                                <a href="?supprimer=<?= urlencode($p['id']) ?>" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Supprimer ce patient ?');">
+                                   Supprimer
+                                </a>
+                            </td>
+                        </form>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

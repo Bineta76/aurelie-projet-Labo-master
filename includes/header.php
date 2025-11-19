@@ -23,8 +23,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'quiSommesNous.php' ? 'active' : '' ?>" href="quiSommesNous.php">Qui sommes-nous ?</a></li>
                     <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'rendez_vous.php' ? 'active' : '' ?>" href="rendez_vous.php">Créer un rendez-vous</a></li>
                     <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'bilan.php' ? 'active' : '' ?>" href="bilan.php">Bilan</a></li>
-                    <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : '' ?>" href="organiser.php">Organiser</a></li>     
-                    <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'contactSupport.php' ? 'active' : '' ?>" href="contactSupport.php">Aide</a></li>
+                    <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'organniser.php' ? 'active' : '' ?>" href="organiser.php">Organiser</a></li>     
+                   t <li class="nav-item"><a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'contactSupport.php' ? 'active' : '' ?>" href="contactSupport.php">Aide</a></li>
                 </ul>
             </div>
         </div>

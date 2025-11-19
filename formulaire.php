@@ -1,12 +1,13 @@
-form action="inscription.php" method="POST">
+
+  <form action="inscription.php" method="POST">
     <label for="username">Nom</label>
     <input type="text" id="username" name="username" required>
 
-    <label for="Prenom">Prénom</label>
-    <input type="text" id="Prenom" name="Prenom" required>
+    <label for="prenom">Prénom</label>
+    <input type="text" id="prenom" name="prenom" required>
 
-    <label for="Login">Login</label>
-    <input type="text" id="Login" name="Login" required>
+    <label for="login">Login</label>
+    <input type="text" id="login" name="login" required>
 
     <label for="email">Email</label>
     <input type="email" id="email" name="email" required>
@@ -20,7 +21,9 @@ form action="inscription.php" method="POST">
 
 <script>
   setTimeout(() => {
-    document.getElementById("tempText").style.opacity = 1;
+    const formContainer = document.getElementById("tempText");
+    if(formContainer) {
+      formContainer.style.opacity = 1;
+    }
   }, 100); // Affiche le formulaire après 100ms
 </script>
-

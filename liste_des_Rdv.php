@@ -21,7 +21,7 @@ try {
 // ✅ Requête : récupérer tous les rendez-vous avec jointures
 $sql = "
     SELECT 
-        r.date,
+        
         m.prenom AS prenom_medecin,
         m.nom AS nom_medecin,
         e.nom AS nom_examen,
@@ -30,7 +30,7 @@ $sql = "
     JOIN medecin m ON m.id = r.id_medecin
     JOIN examen e ON e.id = r.id_examen
     JOIN cabinet_medical c ON c.id = r.id_cabinet_medical
-    ORDER BY r.date DESC
+    
 ";
 
 // ✅ Exécution de la requête
